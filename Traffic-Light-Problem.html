@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<head>
+    <script src="/assets/jquery.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        #controlPanel {
+            float: left;
+            padding-top: 30px;
+        }
+        .button {
+            background-color: gray;
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 90px 40px;
+            cursor: pointer;
+        }
+        #traffic-light {
+            height: 550px;
+            width: 200px;
+            float: left;
+            background-color: #333;
+            border-radius: 40px;
+            margin: 30px 0;
+            padding: 20px;
+        }
+        .bulb {
+            height: 150px;
+            width: 150px;
+            background-color: #111;
+            border-radius: 50%;
+            margin: 25px auto;
+            transition: background 500ms;
+        }
+        .turn-yellow {
+            background-color: yellow;
+        }
+
+        .turn-red {
+            background-color: red;
+        }
+
+        .turn-green {
+            background-color: green;
+        }
+
+        .turn-off {
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="controlPanel">
+        <h1 id="stopButton" class="button">Stop</h1>
+        <h1 id="slowButton" class="button">Slow</h1>
+        <h1 id="goButton" class="button">Go</h1>
+    </div>
+    <div id="traffic-light">
+        <div id="stopLight" class="bulb turn-red turn-off"></div>
+        <div id="slowLight" class="bulb turn-yellow turn-off"></div>
+        <div id="goLight" class="bulb turn-green turn-off"></div>
+    </div>
+</body>
+
+<script>
+  const goLight = document.querySelector('#goLight');
+  const stopLight = document.querySelector('#stopLight');
+  const slowLight = document.querySelector('#slowLight');
+  let slowLightCounter = 1; //to track if slowLight is on for multiple clicks of same button
+  let stopLightCounter = 1;
+  let goLightCounter = 1;
+  let slowLightStatus = false;
+  let stopLightStatus = false; //slowLight is currently on
+  let goLightStatus = false; 
+  //if odd counter, and clicked, turn status to true (light is on), increment its counter(next time we see counter, we will know light is on.. even counter = light on)
+  //turn its status to on
+  //if the counter % 2, then it is off
+  $('#slowButton').on('click', function() {
+    $(slowLight).toggleClass('turn-off');
+      slowLightStatus = true; //slowLight is currently on
+      if (slowLightCounter % 2 === 0) {
+        slowLightStatus = false; //if it jsut turned off, reset status to off
+          //therefore if you click slow light twice in a row, its status will reset to false
+        }
+        slowLightCounter++
+      if (stopLightStatus === true) {
+        $(stopLight).toggleClass('turn-off');
+        stopLightCounter++
+        stopLightStatus = false;
+      }
+      if (goLightStatus === true) {
+        $(goLight).toggleClass('turn-off');
+        goLightCounter++
+        goLightStatus = false;
+      }
+  });
+    $('#stopButton').on('click', function() {
+      $(stopLight).toggleClass('turn-off');
+      stopLightStatus = true;
+      if (stopLightCounter % 2 === 0) {
+        stopLightStatus = false; 
+          //therefore if you click slow light twice in a row, its status will reset to false
+        }
+        stopLightCounter++
+      if (slowLightStatus === true) {
+        $(slowLight).toggleClass('turn-off');
+        slowLightStatus = false;
+        slowLightCounter++
+      }
+      if (goLightStatus === true) {
+        $(goLight).toggleClass('turn-off');
+        goLightStatus = false;
+        goLightCounter++
+      }
+  });
+    $('#goButton').on('click', function() {
+      $(goLight).toggleClass('turn-off');
+      goLightStatus = true;
+      if (goLightCounter % 2 === 0) {
+        goLightStatus = false; 
+          //therefore if you click slow light twice in a row, its status will reset to false
+        }
+        goLightCounter++
+      if (slowLightStatus === true) {
+        $(slowLight).toggleClass('turn-off');
+        slowLightStatus = false;
+        slowLightCounter++
+      }
+      if (stopLightStatus === true) {
+        $(stopLight).toggleClass('turn-off');
+        stopLightStatus = false;
+        stopLightCounter++
+      }
+  });
+  //not taking into account if you click any button, the associated ounter moves one/ but the status will uncorrelate becuase it isn't linked to when other button clicks turn off a different light. We need to associate the counters for this and have them adjust accordingly
+</script>
